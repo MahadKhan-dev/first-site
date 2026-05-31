@@ -1,1238 +1,1187 @@
-index.html
-
-
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>APEX — Strategy & Innovation</title>
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>SF Auto Detail | Premium Auto Detailing — San Francisco</title>
+  <meta name="description" content="San Francisco's premier hand-crafted auto detailing. Any make, any model, including motorcycles. Call 415-776-1844 to book.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- GSAP + ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            gold:    { DEFAULT: '#C9A84C', light: '#E8C97A', dark: '#9A7530' },
-            obsidian:{ DEFAULT: '#0D0D0D', 1: '#111111', 2: '#161616', 3: '#1E1E1E', 4: '#252525' },
-            ash:     { DEFAULT: '#A8A8A8', light: '#D4D4D4', dark: '#6B6B6B' },
-          },
-          fontFamily: {
-            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
-            body:    ['"DM Sans"', 'sans-serif'],
-          },
-          letterSpacing: {
-            widest2: '0.25em',
-          },
-        },
-      },
-    };
-  </script>
 
   <style>
+    /* ── DESIGN TOKENS ─────────────────────────────── */
+    :root {
+      --gold:        #C8A84B;
+      --gold-bright: #E2C46A;
+      --gold-pale:   #F4E4B0;
+      --gold-dim:    rgba(200,168,75,.12);
+      --ink:         #080807;
+      --surface-1:   #0E0D0B;
+      --surface-2:   #161410;
+      --surface-3:   #1E1B14;
+      --white:       #F6F4EE;
+      --muted:       #7A7060;
+      --muted-light: #A89E8A;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --gold: #C9A84C;
-      --gold-light: #E8C97A;
-      --obsidian: #0D0D0D;
-      --ash: #A8A8A8;
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--ink);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    html { font-family: 'DM Sans', sans-serif; background: #0D0D0D; color: #D4D4D4; }
+    /* Fine grain overlay */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
 
-    /* Custom scrollbar */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: #0D0D0D; }
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--ink); }
     ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
 
-    /* Gold gradient text */
-    .text-gold-grad {
-      background: linear-gradient(135deg, #C9A84C 0%, #E8C97A 45%, #9A7530 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    /* ── TYPOGRAPHY ─────────────────────────────────── */
+    .f-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+    /* ── NAV ─────────────────────────────────────────── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 1.6rem 2rem;
+      transition: padding .4s ease, background .4s ease, border-color .4s ease;
+      border-bottom: 1px solid transparent;
     }
-
-    /* Noise overlay for depth */
-    .noise::after {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 1;
+    #nav.solid {
+      background: rgba(8,8,7,.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 1rem 2rem;
+      border-bottom-color: rgba(200,168,75,.12);
     }
-
-    /* Horizontal rule gold */
-    .hr-gold {
-      display: block;
-      width: 60px; height: 1px;
-      background: linear-gradient(90deg, var(--gold), transparent);
-      margin-bottom: 1.5rem;
+    .nav-inner {
+      max-width: 1320px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
     }
-
-    /* Nav link hover */
-    .nav-link {
-      position: relative; font-size: 0.7rem; letter-spacing: 0.18em;
-      text-transform: uppercase; color: #A8A8A8; transition: color 0.3s;
-    }
-    .nav-link::after {
-      content: ''; position: absolute; bottom: -2px; left: 0;
-      width: 0; height: 1px; background: var(--gold); transition: width 0.35s ease;
-    }
-    .nav-link:hover { color: var(--gold-light); }
-    .nav-link:hover::after { width: 100%; }
-
-    /* Hero overlay */
-    .hero-overlay {
-      background: linear-gradient(
-        135deg,
-        rgba(13,13,13,0.95) 0%,
-        rgba(13,13,13,0.75) 50%,
-        rgba(13,13,13,0.55) 100%
-      );
-    }
-
-    /* Marquee */
-    @keyframes marquee {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .marquee-inner { animation: marquee 28s linear infinite; white-space: nowrap; display: flex; }
-    .marquee-inner:hover { animation-play-state: paused; }
-
-    /* Service card hover line */
-    .service-card { position: relative; overflow: hidden; }
-    .service-card::before {
-      content: ''; position: absolute; bottom: 0; left: 0;
-      width: 0; height: 2px;
-      background: linear-gradient(90deg, var(--gold), var(--gold-light));
-      transition: width 0.5s ease;
-    }
-    .service-card:hover::before { width: 100%; }
-
-    /* Stat counter */
-    .stat-num { font-family: 'Cormorant Garamond', serif; }
-
-    /* Image parallax wrapper */
-    .parallax-img { will-change: transform; }
-
-    /* Button primary */
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 14px 36px;
-      border: 1px solid var(--gold);
-      color: var(--gold-light);
-      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-      position: relative; overflow: hidden;
-      transition: color 0.4s;
-      font-family: 'DM Sans', sans-serif;
-    }
-    .btn-primary::before {
-      content: ''; position: absolute; inset: 0;
-      background: var(--gold);
-      transform: translateX(-101%);
-      transition: transform 0.45s cubic-bezier(0.77, 0, 0.175, 1);
-    }
-    .btn-primary:hover { color: #0D0D0D; }
-    .btn-primary:hover::before { transform: translateX(0); }
-    .btn-primary span { position: relative; z-index: 1; }
-
-    /* Team card */
-    .team-card img { transition: transform 0.6s ease; }
-    .team-card:hover img { transform: scale(1.05); }
-
-    /* Testimonial quote */
-    .quote-mark {
+    .logo {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 8rem; line-height: 1;
-      color: var(--gold); opacity: 0.15;
-      position: absolute; top: -1.5rem; left: -0.5rem;
+      font-size: 1.5rem; font-weight: 600;
+      letter-spacing: .04em; color: var(--gold);
+      text-decoration: none; line-height: 1;
+    }
+    .logo em { color: var(--white); font-style: normal; }
+    .nav-links { display: flex; align-items: center; gap: 2.5rem; }
+    .nav-a {
+      font-size: .68rem; font-weight: 500;
+      letter-spacing: .16em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      transition: color .3s;
+    }
+    .nav-a:hover { color: var(--gold); }
+    .nav-cta {
+      font-size: .65rem; font-weight: 600;
+      letter-spacing: .14em; text-transform: uppercase;
+      background: var(--gold); color: var(--ink);
+      padding: .6rem 1.4rem; text-decoration: none;
+      transition: background .3s, transform .2s, box-shadow .3s;
+    }
+    .nav-cta:hover {
+      background: var(--gold-bright);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(200,168,75,.28);
+    }
+    /* Hamburger */
+    #ham { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+    #ham span { display: block; width: 22px; height: 1.5px; background: var(--white); transition: .3s; }
+    #ham.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    #ham.open span:nth-child(2) { opacity: 0; }
+    #ham.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* Mobile menu overlay */
+    #mobile-menu {
+      position: fixed; inset: 0;
+      background: var(--ink);
+      z-index: 900;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+      transform: translateX(100%);
+      transition: transform .5s cubic-bezier(.77,0,.18,1);
+    }
+    #mobile-menu.open { transform: translateX(0); }
+    .mm-link {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 600; color: var(--white);
+      text-decoration: none; line-height: 1.2;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 1.2rem 0;
+      transition: color .3s, padding-left .4s;
+    }
+    .mm-link:hover { color: var(--gold); padding-left: .5rem; }
+
+    /* ── HERO ──────────────────────────────────────── */
+    #hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center;
+      overflow: hidden;
+    }
+    .hero-mesh {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 15% 55%, rgba(200,168,75,.07) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 85% 20%, rgba(200,168,75,.04) 0%, transparent 55%),
+        linear-gradient(160deg, #0a0901 0%, #060605 60%, #0c0b07 100%);
+    }
+    .hero-grid-lines {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(200,168,75,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,168,75,.025) 1px, transparent 1px);
+      background-size: 70px 70px;
+    }
+    .hero-big-text {
+      position: absolute;
+      right: -3vw; bottom: -5vw;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(14rem, 28vw, 32rem);
+      font-weight: 700; line-height: .85;
+      color: rgba(200,168,75,.028);
+      user-select: none; pointer-events: none;
+      letter-spacing: -.04em;
+    }
+    /* Animated gold line */
+    .hero-line-h {
+      position: absolute; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(200,168,75,.35) 30%, rgba(200,168,75,.35) 70%, transparent 100%);
+    }
+    .hero-line-h.top { top: 0; }
+    .hero-line-h.bot { bottom: 0; }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 1320px; margin: 0 auto;
+      padding: 7rem 2rem 12rem;
+      width: 100%;
+    }
+    .hero-eyebrow {
+      font-size: .62rem; font-weight: 600;
+      letter-spacing: .35em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.4rem;
+      display: flex; align-items: center; gap: .8rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block;
+      width: 30px; height: 1px; background: var(--gold);
+    }
+    .hero-h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.8rem, 8.5vw, 9rem);
+      font-weight: 600; line-height: .92;
+      letter-spacing: -.025em;
+      margin-bottom: 2rem;
+    }
+    .hero-h1 .italic { font-style: italic; color: var(--gold); }
+    .hero-divider {
+      width: 56px; height: 1.5px;
+      background: linear-gradient(90deg, var(--gold), rgba(200,168,75,.2));
+      margin-bottom: 1.8rem;
+    }
+    .hero-sub {
+      font-size: .88rem; color: var(--muted-light);
+      line-height: 1.85; max-width: 430px;
+      margin-bottom: 2.8rem; font-weight: 300;
+    }
+    .hero-btns { display: flex; gap: .9rem; flex-wrap: wrap; align-items: center; }
+
+    /* Buttons */
+    .btn-gold {
+      display: inline-flex; align-items: center; gap: .6rem;
+      background: var(--gold); color: var(--ink);
+      font-size: .68rem; font-weight: 600;
+      letter-spacing: .15em; text-transform: uppercase;
+      padding: 1rem 2rem; text-decoration: none;
+      transition: background .3s, transform .25s, box-shadow .3s;
+      position: relative; overflow: hidden;
+    }
+    .btn-gold::after {
+      content: ''; position: absolute;
+      top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+      transition: left .5s;
+    }
+    .btn-gold:hover::after { left: 130%; }
+    .btn-gold:hover {
+      background: var(--gold-bright);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(200,168,75,.3);
+    }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: .6rem;
+      border: 1px solid rgba(200,168,75,.35); color: var(--gold);
+      font-size: .68rem; font-weight: 500;
+      letter-spacing: .15em; text-transform: uppercase;
+      padding: 1rem 1.8rem; text-decoration: none;
+      transition: border-color .3s, background .3s, transform .25s;
+    }
+    .btn-outline:hover {
+      border-color: var(--gold);
+      background: var(--gold-dim);
+      transform: translateY(-2px);
+    }
+
+    /* Hero stats bar */
+    .hero-stats {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(6,6,5,.65);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(200,168,75,.1);
+    }
+    .stats-inner {
+      max-width: 1320px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      padding: 1.4rem 2rem;
+    }
+    .stat-item {
+      text-align: center; padding: .4rem;
+      border-right: 1px solid rgba(255,255,255,.05);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 600;
+      color: var(--gold); line-height: 1;
+      margin-bottom: .3rem;
+    }
+    .stat-lbl {
+      font-size: .58rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ── MARQUEE ─────────────────────────────────────── */
+    .marquee-wrap {
+      background: var(--gold); overflow: hidden;
+      padding: .85rem 0;
+    }
+    .marquee-track {
+      display: flex; gap: 0;
+      width: max-content;
+      animation: mq 30s linear infinite;
+    }
+    .mq-item {
+      display: flex; align-items: center; gap: 2rem;
+      padding: 0 2rem;
+      font-size: .62rem; font-weight: 600;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: var(--ink); white-space: nowrap;
+    }
+    .mq-dot { width: 3px; height: 3px; background: var(--ink); border-radius: 50%; opacity: .45; }
+    @keyframes mq {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── SECTION ANATOMY ────────────────────────────── */
+    .section-eyebrow {
+      font-size: .6rem; font-weight: 600;
+      letter-spacing: .32em; text-transform: uppercase;
+      color: var(--gold);
+      display: flex; align-items: center; gap: .75rem;
+    }
+    .section-eyebrow::before {
+      content: ''; width: 24px; height: 1px; background: var(--gold);
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 4.4rem);
+      font-weight: 600; line-height: 1.05;
+      letter-spacing: -.018em;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .gold-rule {
+      width: 44px; height: 1.5px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    /* ── SERVICE CARDS ──────────────────────────────── */
+    #services { background: var(--surface-1); }
+
+    .card {
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,.04);
+      position: relative; overflow: hidden;
+      transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+      display: flex; flex-direction: column;
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold) 0%, rgba(200,168,75,.2) 60%, transparent 100%);
+      opacity: 0; transition: opacity .35s;
+    }
+    .card:hover { transform: translateY(-5px); border-color: rgba(200,168,75,.18); box-shadow: 0 24px 64px rgba(0,0,0,.5); }
+    .card:hover::before { opacity: 1; }
+    .card.featured {
+      background: linear-gradient(145deg, #1C1608 0%, #120E05 100%);
+      border-color: rgba(200,168,75,.22);
+    }
+    .card.featured::before { opacity: 1; }
+    .card.crown {
+      background: linear-gradient(145deg, #201700 0%, #0e0b00 100%);
+      border-color: rgba(200,168,75,.35);
+    }
+    .card.crown::before { opacity: 1; height: 3px; }
+
+    .tier-pill {
+      display: inline-block;
+      font-size: .58rem; font-weight: 600;
+      letter-spacing: .18em; text-transform: uppercase;
+      padding: .28rem .7rem;
+    }
+    .tier-base   { background: rgba(255,255,255,.05); color: var(--muted-light); }
+    .tier-plus   { background: rgba(200,168,75,.1);  color: var(--gold); }
+    .tier-elite  { background: rgba(200,168,75,.17); color: var(--gold-bright); }
+    .tier-sig    { background: rgba(200,168,75,.25); color: var(--gold-pale); border: 1px solid rgba(200,168,75,.3); }
+    .tier-crown  { background: var(--gold); color: var(--ink); }
+
+    .card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem; font-weight: 600; line-height: 1.15;
+    }
+    .card-from { font-size: .58rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+    .card-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 600; color: var(--gold);
+    }
+
+    .inc-label {
+      font-size: .62rem; font-weight: 600;
+      letter-spacing: .1em; color: var(--gold); text-transform: uppercase;
+      margin-bottom: .6rem;
+    }
+    .feature-row {
+      display: flex; align-items: flex-start; gap: .55rem;
+      font-size: .76rem; color: rgba(246,244,238,.6); line-height: 1.55;
+      margin-bottom: .48rem;
+    }
+    .feature-row .dash { color: var(--gold); flex-shrink: 0; margin-top: 1px; font-size: .8rem; }
+
+    /* Price grid inside card */
+    .price-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: rgba(255,255,255,.05);
+      margin-top: auto;
+    }
+    .pg-cell { background: rgba(0,0,0,.35); padding: .8rem .5rem; text-align: center; }
+    .pg-size  { font-size: .54rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: .22rem; }
+    .pg-val   { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--gold); }
+
+    /* Notes bar */
+    .notes-bar {
+      background: var(--surface-3);
+      border: 1px solid rgba(255,255,255,.04);
+      border-top: 2px solid rgba(200,168,75,.15);
+    }
+    .note-item {
+      font-size: .72rem; color: var(--muted-light); line-height: 1.6;
+      padding-left: 1.1rem; position: relative;
+    }
+    .note-item::before {
+      content: '·'; position: absolute; left: 0;
+      color: var(--gold); font-size: 1rem;
+    }
+
+    /* ── FEATURES / WHY US ───────────────────────────── */
+    #why { background: var(--ink); }
+
+    .why-card {
+      padding: 2.4rem 2rem;
+      border: 1px solid rgba(255,255,255,.04);
+      background: var(--surface-1);
+      transition: border-color .3s, background .3s, transform .3s;
+    }
+    .why-card:hover {
+      border-color: rgba(200,168,75,.15);
+      background: rgba(200,168,75,.025);
+      transform: translateY(-3px);
+    }
+    .why-icon {
+      width: 46px; height: 46px;
+      border: 1px solid rgba(200,168,75,.28);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); margin-bottom: 1.4rem;
+    }
+    .why-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-weight: 600; margin-bottom: .6rem;
+    }
+    .why-desc { font-size: .76rem; color: var(--muted); line-height: 1.7; }
+
+    /* ── CERAMIC BAR ───────────────────────────────── */
+    #ceramic-bar {
+      background: var(--surface-2);
+      border-top: 1px solid rgba(200,168,75,.1);
+      border-bottom: 1px solid rgba(200,168,75,.1);
+    }
+
+    /* ── CTA ───────────────────────────────────────── */
+    #cta {
+      position: relative; overflow: hidden;
+      background: var(--surface-1);
+    }
+    .cta-radial {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 80% at 50% 50%, rgba(200,168,75,.07) 0%, transparent 68%);
       pointer-events: none;
     }
-
-    /* Form inputs */
-    .form-input {
-      width: 100%; background: transparent;
-      border-bottom: 1px solid #333;
-      padding: 14px 0;
-      color: #D4D4D4;
-      font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
-      outline: none; transition: border-color 0.3s;
+    .cta-rings {
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(ellipse 70% 55% at 50% 50%, transparent 60%, rgba(200,168,75,.03) 62%, transparent 64%),
+        radial-gradient(ellipse 50% 40% at 50% 50%, transparent 70%, rgba(200,168,75,.02) 72%, transparent 74%);
+      pointer-events: none;
     }
-    .form-input::placeholder { color: #555; font-size: 0.85rem; letter-spacing: 0.05em; }
-    .form-input:focus { border-color: var(--gold); }
-
-    /* Reveal animation base states */
-    .reveal-up    { opacity: 0; transform: translateY(60px); }
-    .reveal-left  { opacity: 0; transform: translateX(-60px); }
-    .reveal-right { opacity: 0; transform: translateX(60px); }
-    .reveal-fade  { opacity: 0; }
-    .reveal-scale { opacity: 0; transform: scale(0.88); }
-
-    /* Mobile menu */
-    #mobile-menu { transition: transform 0.5s cubic-bezier(0.77,0,0.175,1), opacity 0.4s; }
-    #mobile-menu.closed { transform: translateX(100%); opacity: 0; pointer-events: none; }
-    #mobile-menu.open   { transform: translateX(0);    opacity: 1; pointer-events: all; }
-
-    /* Cursor dot */
-    #cursor-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--gold);
-      position: fixed; pointer-events: none; z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: width 0.2s, height 0.2s, background 0.2s;
+    .phone-big {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 600; color: var(--gold);
+      letter-spacing: .03em; line-height: 1;
+      text-decoration: none;
+      display: inline-block;
+      transition: color .3s, letter-spacing .3s;
     }
-    #cursor-ring {
-      width: 38px; height: 38px; border-radius: 50%;
-      border: 1px solid rgba(201,168,76,0.5);
-      position: fixed; pointer-events: none; z-index: 9998;
-      transform: translate(-50%, -50%);
-      transition: transform 0.15s ease, width 0.25s, height 0.25s;
+    .phone-big:hover { color: var(--gold-bright); letter-spacing: .06em; }
+
+    /* ── FOOTER ────────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      border-top: 1px solid rgba(255,255,255,.04);
     }
-    @media (hover: none) { #cursor-dot, #cursor-ring { display: none; } }
-
-    /* Section label */
-    .section-label {
-      font-size: 0.65rem; letter-spacing: 0.28em;
-      text-transform: uppercase; color: var(--gold);
-      font-family: 'DM Sans', sans-serif; font-weight: 400;
+    .foot-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.1rem; font-weight: 600; color: var(--gold);
     }
+    .foot-logo em { font-style: normal; color: var(--white); }
+    .foot-col-label {
+      font-size: .58rem; font-weight: 600;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.3rem;
+    }
+    .foot-link {
+      display: block; font-size: .78rem; color: var(--muted);
+      text-decoration: none; margin-bottom: .65rem;
+      transition: color .3s;
+    }
+    .foot-link:hover { color: var(--white); }
 
-    /* Gold border accent */
-    .border-gold-thin { border-color: rgba(201,168,76,0.25); }
+    /* ── REVEAL CLASSES (pre-animation state) ──────── */
+    .js-fade     { opacity: 0; }
+    .js-up       { opacity: 0; transform: translateY(36px); }
+    .js-left     { opacity: 0; transform: translateX(-28px); }
+    .js-right    { opacity: 0; transform: translateX(28px); }
+    .js-scale    { opacity: 0; transform: scale(.95); }
 
-    /* Progress bar */
-    #progress-bar {
-      position: fixed; top: 0; left: 0;
-      height: 2px; background: linear-gradient(90deg, var(--gold), var(--gold-light));
-      z-index: 9997; width: 0%;
-      transition: width 0.1s linear;
+    /* ── BURNING MAN BADGE ─────────────────────────── */
+    .bm-badge {
+      display: inline-flex; align-items: center; gap: .45rem;
+      background: rgba(255,130,0,.09);
+      border: 1px solid rgba(255,130,0,.22);
+      color: #FF9B30;
+      font-size: .62rem; font-weight: 500;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: .3rem .9rem; line-height: 1;
     }
 
-    /* Floating nav background */
-    #navbar { transition: background 0.5s, box-shadow 0.5s, padding 0.4s; }
-    #navbar.scrolled {
-      background: rgba(13,13,13,0.92) !important;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 1px 0 rgba(201,168,76,0.15);
+    /* ── RESPONSIVE ────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .stat-item:nth-child(2) { border-right: none; }
+    }
+    @media (max-width: 768px) {
+      #nav .nav-links { display: none; }
+      #ham { display: flex; }
+      .hero-h1 { font-size: clamp(3rem, 12vw, 5rem); }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); gap: .5rem; }
+      .about-cols { flex-direction: column !important; }
+      .foot-cols { flex-direction: column !important; gap: 2.5rem !important; }
+    }
+    @media (max-width: 480px) {
+      .hero-btns { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
+<body>
 
-<body class="bg-obsidian text-ash-light overflow-x-hidden">
+<!-- ═══════════════════════ NAVIGATION ═══════════════════════ -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">SF <em>Auto</em> Detail</a>
+    <div class="nav-links">
+      <a href="#services" class="nav-a">Services</a>
+      <a href="#pricing" class="nav-a">Pricing</a>
+      <a href="#why" class="nav-a">Why Us</a>
+      <a href="tel:4157761844" class="nav-cta">☎ 415-776-1844</a>
+    </div>
+    <button id="ham" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
 
-  <!-- Progress Bar -->
-  <div id="progress-bar"></div>
+<!-- Mobile menu -->
+<div id="mobile-menu">
+  <a href="#services" class="mm-link" onclick="toggleMenu()">Services</a>
+  <a href="#pricing" class="mm-link" onclick="toggleMenu()">Pricing</a>
+  <a href="#why" class="mm-link" onclick="toggleMenu()">Why Us</a>
+  <a href="tel:4157761844" class="mm-link" onclick="toggleMenu()" style="color:var(--gold)">415-776-1844</a>
+</div>
 
-  <!-- Custom Cursor -->
-  <div id="cursor-dot"></div>
-  <div id="cursor-ring"></div>
 
-  <!-- ════════════════════════════════════════ NAVBAR ════════════════════════════════════════ -->
-  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 px-8 md:px-16 py-7 flex items-center justify-between">
-    <!-- Logo -->
-    <a href="#hero" class="flex items-center gap-3 group">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="14,1 27,27 1,27" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
-        <polygon points="14,7 22,24 6,24" fill="#C9A84C" opacity="0.2"/>
-      </svg>
-      <span class="font-display font-semibold tracking-widest text-ash-light text-lg group-hover:text-gold transition-colors duration-300">APEX</span>
-    </a>
+<!-- ═══════════════════════ HERO ═══════════════════════════ -->
+<section id="hero">
+  <div class="hero-mesh"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-big-text">SF</div>
+  <div class="hero-line-h top"></div>
+  <div class="hero-line-h bot"></div>
 
-    <!-- Desktop Nav -->
-    <ul class="hidden md:flex items-center gap-10">
-      <li><a href="#about"    class="nav-link">About</a></li>
-      <li><a href="#services" class="nav-link">Services</a></li>
-      <li><a href="#work"     class="nav-link">Work</a></li>
-      <li><a href="#team"     class="nav-link">Team</a></li>
-      <li><a href="#contact"  class="nav-link">Contact</a></li>
-    </ul>
+  <div class="hero-content">
+    <p class="hero-eyebrow" id="h-eye">San Francisco · Any Make · Any Model</p>
 
-    <!-- CTA + Hamburger -->
-    <div class="flex items-center gap-6">
-      <a href="#contact" class="btn-primary hidden md:inline-flex text-xs">
-        <span>Get in Touch</span>
-        <span>→</span>
+    <h1 class="hero-h1">
+      <span class="h1-l1" style="display:block">Premium Auto</span>
+      <span class="h1-l2 italic" style="display:block">Detailing</span>
+      <span class="h1-l3" style="display:block">Excellence</span>
+    </h1>
+
+    <div class="hero-divider" id="h-div"></div>
+
+    <p class="hero-sub" id="h-sub">
+      Hand-crafted care for every vehicle — cars, SUVs, trucks, and motorcycles. From a quick hand wash to a full multi-stage detail, we deliver perfection.
+    </p>
+
+    <div class="hero-btns" id="h-btns">
+      <a href="tel:4157761844" class="btn-gold">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        Book Now · 415-776-1844
       </a>
-      <button id="hamburger" class="md:hidden flex flex-col gap-[5px] group" aria-label="Menu">
-        <span class="w-6 h-px bg-ash-light group-hover:bg-gold transition-colors duration-300 block"></span>
-        <span class="w-4 h-px bg-ash-light group-hover:bg-gold transition-colors duration-300 block ml-auto"></span>
-        <span class="w-6 h-px bg-ash-light group-hover:bg-gold transition-colors duration-300 block"></span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- Mobile Menu -->
-  <div id="mobile-menu" class="closed fixed inset-0 z-40 bg-obsidian-1 flex flex-col justify-center items-center gap-10">
-    <button id="close-menu" class="absolute top-7 right-8 text-ash-light hover:text-gold text-2xl transition-colors">✕</button>
-    <a href="#about"    class="font-display text-4xl text-ash-light hover:text-gold transition-colors" onclick="closeMenu()">About</a>
-    <a href="#services" class="font-display text-4xl text-ash-light hover:text-gold transition-colors" onclick="closeMenu()">Services</a>
-    <a href="#work"     class="font-display text-4xl text-ash-light hover:text-gold transition-colors" onclick="closeMenu()">Work</a>
-    <a href="#team"     class="font-display text-4xl text-ash-light hover:text-gold transition-colors" onclick="closeMenu()">Team</a>
-    <a href="#contact"  class="font-display text-4xl text-ash-light hover:text-gold transition-colors" onclick="closeMenu()">Contact</a>
-  </div>
-
-  <!-- ════════════════════════════════════════ HERO ════════════════════════════════════════ -->
-  <section id="hero" class="relative min-h-screen flex items-end pb-24 overflow-hidden noise">
-    <!-- BG Image -->
-    <div class="absolute inset-0">
-      <img
-        src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1800&q=80&fit=crop"
-        alt="Modern architecture"
-        class="w-full h-full object-cover parallax-img"
-        id="hero-bg"
-      />
-      <div class="hero-overlay absolute inset-0"></div>
-    </div>
-
-    <!-- Floating label top-right -->
-    <div class="absolute top-36 right-10 hidden lg:flex flex-col items-end gap-2 z-10 reveal-fade">
-      <span class="section-label">Est. 2009</span>
-      <span class="w-16 h-px bg-gold opacity-40 block"></span>
-    </div>
-
-    <!-- Scroll indicator -->
-    <div class="absolute bottom-10 right-10 hidden md:flex flex-col items-center gap-3 z-10">
-      <span class="section-label" style="writing-mode:vertical-lr;letter-spacing:0.22em;">Scroll</span>
-      <span class="w-px h-16 bg-gradient-to-b from-gold to-transparent block"></span>
-    </div>
-
-    <!-- Content -->
-    <div class="relative z-10 px-8 md:px-16 lg:px-24 w-full max-w-6xl">
-      <p class="section-label mb-6 reveal-up" id="hero-label">Strategic Excellence</p>
-      <h1 class="font-display font-light text-ash-light leading-[0.92] mb-8 reveal-up" id="hero-h1"
-          style="font-size: clamp(3.8rem, 9vw, 9rem);">
-        We Shape<br/>
-        <em class="text-gold-grad not-italic font-semibold">Tomorrow's</em><br/>
-        Leaders.
-      </h1>
-      <p class="font-body text-ash max-w-lg mb-12 leading-relaxed text-base md:text-lg reveal-up" id="hero-sub">
-        APEX is a premier strategy and innovation consultancy helping bold organisations reach their absolute peak — from vision to execution.
-      </p>
-      <div class="flex flex-wrap gap-5 reveal-up" id="hero-ctas">
-        <a href="#services" class="btn-primary"><span>Explore Services</span><span>→</span></a>
-        <a href="#work" class="btn-primary" style="border-color:rgba(201,168,76,0.3); color:#A8A8A8;">
-          <span>View Our Work</span>
-        </a>
-      </div>
-
-      <!-- Stats row -->
-      <div class="mt-20 flex flex-wrap gap-12 border-t border-gold-thin pt-10 reveal-up" id="hero-stats">
-        <div>
-          <p class="stat-num text-5xl font-semibold text-ash-light">320<span class="text-gold">+</span></p>
-          <p class="text-xs tracking-widest text-ash-dark uppercase mt-1">Clients Worldwide</p>
-        </div>
-        <div>
-          <p class="stat-num text-5xl font-semibold text-ash-light">17<span class="text-gold">yr</span></p>
-          <p class="text-xs tracking-widest text-ash-dark uppercase mt-1">Industry Experience</p>
-        </div>
-        <div>
-          <p class="stat-num text-5xl font-semibold text-ash-light">$4.2<span class="text-gold">B</span></p>
-          <p class="text-xs tracking-widest text-ash-dark uppercase mt-1">Value Generated</p>
-        </div>
-        <div>
-          <p class="stat-num text-5xl font-semibold text-ash-light">98<span class="text-gold">%</span></p>
-          <p class="text-xs tracking-widest text-ash-dark uppercase mt-1">Client Retention</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════ MARQUEE ════════════════════════════════════════ -->
-  <div class="py-5 border-y border-gold-thin overflow-hidden bg-obsidian-2">
-    <div class="marquee-inner">
-      <span class="marquee-text">
-        <!-- Repeated twice for seamless loop -->
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Strategy &amp; Innovation</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Executive Leadership</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Digital Transformation</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Market Intelligence</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Organisational Design</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Private Equity Advisory</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Venture Acceleration</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Brand Architecture</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Strategy &amp; Innovation</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Executive Leadership</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Digital Transformation</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Market Intelligence</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Organisational Design</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Private Equity Advisory</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Venture Acceleration</span>
-        <span class="text-gold mx-4">◆</span>
-        <span class="text-xs tracking-widest uppercase text-ash-dark mx-8 font-body">Brand Architecture</span>
-        <span class="text-gold mx-4">◆</span>
-      </span>
+      <a href="#services" class="btn-outline">
+        Explore Services
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
     </div>
   </div>
 
-  <!-- ════════════════════════════════════════ ABOUT ════════════════════════════════════════ -->
-  <section id="about" class="py-32 px-8 md:px-16 lg:px-24 bg-obsidian-1">
-    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 lg:gap-24 items-center">
-      <!-- Left: Images -->
-      <div class="relative h-[520px] md:h-[640px]">
-        <div class="absolute top-0 left-0 w-3/4 h-5/6 overflow-hidden reveal-left" id="about-img1">
-          <img
-            src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=900&q=80&fit=crop"
-            alt="Team meeting"
-            class="w-full h-full object-cover parallax-img"
-          />
-        </div>
-        <div class="absolute bottom-0 right-0 w-1/2 h-2/5 overflow-hidden border-4 border-obsidian-1 reveal-right" id="about-img2">
-          <img
-            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&q=80&fit=crop"
-            alt="Office collaboration"
-            class="w-full h-full object-cover parallax-img"
-          />
-        </div>
-        <!-- Gold accent box -->
-        <div class="absolute top-1/2 -translate-y-1/2 -right-3 w-px h-40 bg-gradient-to-b from-transparent via-gold to-transparent hidden md:block"></div>
-        <!-- Year badge -->
-        <div class="absolute bottom-6 left-6 z-10 bg-obsidian px-6 py-4 border border-gold-thin">
-          <p class="stat-num text-5xl text-gold font-semibold leading-none">17</p>
-          <p class="text-xs uppercase tracking-widest text-ash-dark mt-1">Years of Excellence</p>
-        </div>
+  <!-- Stats bar -->
+  <div class="hero-stats">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <div class="stat-num">8</div>
+        <div class="stat-lbl">Service Packages</div>
       </div>
-
-      <!-- Right: Text -->
-      <div>
-        <p class="section-label mb-4 reveal-up">Our Philosophy</p>
-        <span class="hr-gold reveal-up"></span>
-        <h2 class="font-display font-light text-ash-light leading-tight mb-8 reveal-up"
-            style="font-size:clamp(2.4rem,4vw,3.5rem);">
-          Precision Thinking.<br/>
-          <em class="text-gold-grad not-italic">Transformative</em> Results.
-        </h2>
-        <p class="text-ash leading-relaxed mb-6 reveal-up">
-          At APEX, we believe the most meaningful transformations begin with clarity of thought. We are not a firm that applies templates — we craft bespoke strategies grounded in deep research, sharp instinct, and an unrelenting pursuit of excellence.
-        </p>
-        <p class="text-ash leading-relaxed mb-10 reveal-up">
-          From Fortune 500 enterprises to ambitious growth-stage ventures, our partners bring decades of frontline experience across every major industry. We sit at the intersection of strategy, technology, and human capital — where real change happens.
-        </p>
-        <div class="grid grid-cols-2 gap-8 border-t border-gold-thin pt-10 reveal-up">
-          <div>
-            <p class="section-label mb-2">Headquarters</p>
-            <p class="text-ash-light font-body">New York · London · Singapore</p>
-          </div>
-          <div>
-            <p class="section-label mb-2">Sectors</p>
-            <p class="text-ash-light font-body">Finance · Tech · Healthcare · Energy</p>
-          </div>
-        </div>
+      <div class="stat-item">
+        <div class="stat-num" style="font-size:1.5rem;padding-top:.35rem">SF</div>
+        <div class="stat-lbl">Local & Proud</div>
       </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════ SERVICES ════════════════════════════════════════ -->
-  <section id="services" class="py-32 px-8 md:px-16 lg:px-24 bg-obsidian-2">
-    <div class="max-w-7xl mx-auto">
-      <!-- Header -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
-        <div>
-          <p class="section-label mb-4 reveal-up">What We Do</p>
-          <span class="hr-gold reveal-up"></span>
-          <h2 class="font-display font-light text-ash-light leading-tight reveal-up"
-              style="font-size:clamp(2.4rem,4.5vw,4rem);">
-            Services Crafted<br/>
-            for the <em class="text-gold-grad not-italic">Ambitious.</em>
-          </h2>
-        </div>
-        <p class="text-ash max-w-sm leading-relaxed text-sm md:text-base reveal-up">
-          Each engagement is unique. We tailor every service to your organisation's specific challenges, culture, and ambitions.
-        </p>
+      <div class="stat-item">
+        <div class="stat-num" style="font-size:1.5rem;padding-top:.35rem">Any</div>
+        <div class="stat-lbl">Make & Model</div>
       </div>
-
-      <!-- Service Grid -->
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-obsidian-4" id="services-grid">
-        <!-- Card 1 -->
-        <div class="service-card bg-obsidian-2 p-10 hover:bg-obsidian-3 transition-colors duration-400 reveal-up group">
-          <div class="w-12 h-12 border border-gold-thin flex items-center justify-center mb-8 group-hover:border-gold transition-colors duration-400">
-            <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
-            </svg>
-          </div>
-          <h3 class="font-display text-2xl text-ash-light mb-4 font-medium">Corporate Strategy</h3>
-          <p class="text-ash text-sm leading-relaxed mb-8">
-            We define the strategic direction for boards and executive teams — identifying growth vectors, competitive moats, and the hard choices that separate the great from the merely good.
-          </p>
-          <span class="text-gold text-xs tracking-widest uppercase group-hover:gap-3 flex items-center gap-2 transition-all duration-300">
-            Learn More <span class="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </span>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="service-card bg-obsidian-2 p-10 hover:bg-obsidian-3 transition-colors duration-400 reveal-up group">
-          <div class="w-12 h-12 border border-gold-thin flex items-center justify-center mb-8 group-hover:border-gold transition-colors duration-400">
-            <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 3.75H6.912a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859"/>
-            </svg>
-          </div>
-          <h3 class="font-display text-2xl text-ash-light mb-4 font-medium">Digital Transformation</h3>
-          <p class="text-ash text-sm leading-relaxed mb-8">
-            From legacy modernisation to AI-native operating models, we guide organisations through the complex journey of becoming truly digital — without disrupting what makes them exceptional.
-          </p>
-          <span class="text-gold text-xs tracking-widest uppercase flex items-center gap-2 transition-all duration-300 group-hover:gap-3">
-            Learn More <span class="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </span>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="service-card bg-obsidian-2 p-10 hover:bg-obsidian-3 transition-colors duration-400 reveal-up group">
-          <div class="w-12 h-12 border border-gold-thin flex items-center justify-center mb-8 group-hover:border-gold transition-colors duration-400">
-            <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/>
-            </svg>
-          </div>
-          <h3 class="font-display text-2xl text-ash-light mb-4 font-medium">Leadership &amp; Talent</h3>
-          <p class="text-ash text-sm leading-relaxed mb-8">
-            Great strategies fail without great leaders. We help you build the executive capability, culture, and organisational design to execute with confidence at every level.
-          </p>
-          <span class="text-gold text-xs tracking-widest uppercase flex items-center gap-2 transition-all duration-300 group-hover:gap-3">
-            Learn More <span class="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </span>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="service-card bg-obsidian-2 p-10 hover:bg-obsidian-3 transition-colors duration-400 reveal-up group">
-          <div class="w-12 h-12 border border-gold-thin flex items-center justify-center mb-8 group-hover:border-gold transition-colors duration-400">
-            <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/>
-            </svg>
-          </div>
-          <h3 class="font-display text-2xl text-ash-light mb-4 font-medium">M&amp;A Advisory</h3>
-          <p class="text-ash text-sm leading-relaxed mb-8">
-            We support acquirers and targets through the full deal cycle — from strategic rationale and due diligence through integration planning and value realisation.
-          </p>
-          <span class="text-gold text-xs tracking-widest uppercase flex items-center gap-2 transition-all duration-300 group-hover:gap-3">
-            Learn More <span class="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </span>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="service-card bg-obsidian-2 p-10 hover:bg-obsidian-3 transition-colors duration-400 reveal-up group">
-          <div class="w-12 h-12 border border-gold-thin flex items-center justify-center mb-8 group-hover:border-gold transition-colors duration-400">
-            <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/>
-            </svg>
-          </div>
-          <h3 class="font-display text-2xl text-ash-light mb-4 font-medium">Market Expansion</h3>
-          <p class="text-ash text-sm leading-relaxed mb-8">
-            Entering a new geography or segment? We map the landscape, assess the risks, and build the entry playbook — so your expansion is bold but not blind.
-          </p>
-          <span class="text-gold text-xs tracking-widest uppercase flex items-center gap-2 transition-all duration-300 group-hover:gap-3">
-            Learn More <span class="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </span>
-        </div>
-
-        <!-- Card 6 -->
-        <div class="service-card bg-obsidian-2 p-10 hover:bg-obsidian-3 transition-colors duration-400 reveal-up group">
-          <div class="w-12 h-12 border border-gold-thin flex items-center justify-center mb-8 group-hover:border-gold transition-colors duration-400">
-            <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.82m5.84-2.56a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.819m2.562-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
-            </svg>
-          </div>
-          <h3 class="font-display text-2xl text-ash-light mb-4 font-medium">Innovation Labs</h3>
-          <p class="text-ash text-sm leading-relaxed mb-8">
-            We run structured innovation programmes — from design sprints to venture-building — that turn internal ideas into market-ready products and new revenue streams.
-          </p>
-          <span class="text-gold text-xs tracking-widest uppercase flex items-center gap-2 transition-all duration-300 group-hover:gap-3">
-            Learn More <span class="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════ WORK / CASE STUDIES ════════════════════════════════════════ -->
-  <section id="work" class="py-32 px-8 md:px-16 lg:px-24 bg-obsidian-1">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
-        <div>
-          <p class="section-label mb-4 reveal-up">Selected Work</p>
-          <span class="hr-gold reveal-up"></span>
-          <h2 class="font-display font-light text-ash-light leading-tight reveal-up"
-              style="font-size:clamp(2.4rem,4.5vw,4rem);">
-            Proof in <em class="text-gold-grad not-italic">Practice.</em>
-          </h2>
-        </div>
-        <a href="#contact" class="btn-primary reveal-up self-start"><span>All Case Studies</span><span>→</span></a>
-      </div>
-
-      <!-- Case Study 1 — Full Width -->
-      <div class="group relative overflow-hidden mb-4 reveal-scale" style="height:520px;" id="cs1">
-        <img
-          src="https://images.unsplash.com/photo-1606857521015-7f9fcf423740?w=1600&q=80&fit=crop"
-          alt="Tech transformation case study"
-          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div class="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/40 to-transparent"></div>
-        <div class="absolute bottom-0 left-0 p-10 md:p-14">
-          <p class="section-label mb-3">Financial Services · 2024</p>
-          <h3 class="font-display text-3xl md:text-5xl text-ash-light font-light mb-4">
-            $1.2B Revenue Unlock for<br/>Global Investment Bank
-          </h3>
-          <p class="text-ash text-sm max-w-xl leading-relaxed hidden md:block">
-            A complete operating model redesign surfaced $1.2B in untapped value over 18 months through portfolio rationalisation and proprietary pricing intelligence.
-          </p>
-        </div>
-        <div class="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-          <div class="bg-gold text-obsidian text-xs tracking-widest uppercase px-4 py-2 font-medium">View Case</div>
-        </div>
-      </div>
-
-      <!-- Case Study Row 2 & 3 -->
-      <div class="grid md:grid-cols-2 gap-4">
-        <div class="group relative overflow-hidden reveal-left" style="height:380px;" id="cs2">
-          <img
-            src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=900&q=80&fit=crop"
-            alt="Healthcare transformation"
-            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/30 to-transparent"></div>
-          <div class="absolute bottom-0 left-0 p-8">
-            <p class="section-label mb-2">Healthcare · 2023</p>
-            <h3 class="font-display text-2xl md:text-3xl text-ash-light font-light">
-              AI-Powered Patient<br/>Outcomes Programme
-            </h3>
-          </div>
-        </div>
-        <div class="group relative overflow-hidden reveal-right" style="height:380px;" id="cs3">
-          <img
-            src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&q=80&fit=crop"
-            alt="Venture building"
-            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/30 to-transparent"></div>
-          <div class="absolute bottom-0 left-0 p-8">
-            <p class="section-label mb-2">Technology · 2023</p>
-            <h3 class="font-display text-2xl md:text-3xl text-ash-light font-light">
-              Venture-Building at<br/>Scale: 6 New Products
-            </h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════ IMPACT BAND ════════════════════════════════════════ -->
-  <div class="relative py-28 overflow-hidden noise">
-    <img
-      src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1800&q=80&fit=crop"
-      alt="skyline at dusk"
-      class="absolute inset-0 w-full h-full object-cover opacity-20"
-    />
-    <div class="absolute inset-0 bg-gradient-to-r from-obsidian via-obsidian/80 to-obsidian"></div>
-    <div class="relative z-10 max-w-7xl mx-auto px-8 md:px-16 lg:px-24 grid grid-cols-2 md:grid-cols-4 gap-12">
-      <div class="text-center reveal-scale">
-        <p class="stat-num text-6xl md:text-7xl font-semibold text-ash-light leading-none">320<span class="text-gold">+</span></p>
-        <p class="text-xs tracking-widest uppercase text-ash-dark mt-3">Engagements Completed</p>
-      </div>
-      <div class="text-center reveal-scale">
-        <p class="stat-num text-6xl md:text-7xl font-semibold text-ash-light leading-none">42<span class="text-gold">+</span></p>
-        <p class="text-xs tracking-widest uppercase text-ash-dark mt-3">Countries Served</p>
-      </div>
-      <div class="text-center reveal-scale">
-        <p class="stat-num text-6xl md:text-7xl font-semibold text-ash-light leading-none">150<span class="text-gold">+</span></p>
-        <p class="text-xs tracking-widest uppercase text-ash-dark mt-3">Expert Partners</p>
-      </div>
-      <div class="text-center reveal-scale">
-        <p class="stat-num text-6xl md:text-7xl font-semibold text-ash-light leading-none">$4.2<span class="text-gold">B</span></p>
-        <p class="text-xs tracking-widest uppercase text-ash-dark mt-3">Value Created</p>
+      <div class="stat-item">
+        <div class="stat-num" style="font-size:1.1rem;padding-top:.6rem;letter-spacing:.05em">★★★★★</div>
+        <div class="stat-lbl">Premium Quality</div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- ════════════════════════════════════════ TEAM ════════════════════════════════════════ -->
-  <section id="team" class="py-32 px-8 md:px-16 lg:px-24 bg-obsidian-2">
-    <div class="max-w-7xl mx-auto">
-      <div class="mb-20">
-        <p class="section-label mb-4 reveal-up">Our People</p>
-        <span class="hr-gold reveal-up"></span>
-        <h2 class="font-display font-light text-ash-light leading-tight reveal-up"
-            style="font-size:clamp(2.4rem,4.5vw,4rem);">
-          The Minds Behind<br/>
-          the <em class="text-gold-grad not-italic">Momentum.</em>
-        </h2>
-      </div>
+<!-- ═══════════════════════ MARQUEE ════════════════════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="mq-item">Exterior Hand Wash<span class="mq-dot"></span></div>
+    <div class="mq-item">Leather Conditioning<span class="mq-dot"></span></div>
+    <div class="mq-item">Orbital Wax<span class="mq-dot"></span></div>
+    <div class="mq-item">Paint Correction<span class="mq-dot"></span></div>
+    <div class="mq-item">Oxidation Removal<span class="mq-dot"></span></div>
+    <div class="mq-item">Interior Detailing<span class="mq-dot"></span></div>
+    <div class="mq-item">Ceramic Coating Available<span class="mq-dot"></span></div>
+    <div class="mq-item">Motorcycles Welcome<span class="mq-dot"></span></div>
+    <div class="mq-item">Post Burning Man Specialists<span class="mq-dot"></span></div>
+    <div class="mq-item">Tire Conditioning<span class="mq-dot"></span></div>
+    <!-- Duplicate for seamless loop -->
+    <div class="mq-item">Exterior Hand Wash<span class="mq-dot"></span></div>
+    <div class="mq-item">Leather Conditioning<span class="mq-dot"></span></div>
+    <div class="mq-item">Orbital Wax<span class="mq-dot"></span></div>
+    <div class="mq-item">Paint Correction<span class="mq-dot"></span></div>
+    <div class="mq-item">Oxidation Removal<span class="mq-dot"></span></div>
+    <div class="mq-item">Interior Detailing<span class="mq-dot"></span></div>
+    <div class="mq-item">Ceramic Coating Available<span class="mq-dot"></span></div>
+    <div class="mq-item">Motorcycles Welcome<span class="mq-dot"></span></div>
+    <div class="mq-item">Post Burning Man Specialists<span class="mq-dot"></span></div>
+    <div class="mq-item">Tire Conditioning<span class="mq-dot"></span></div>
+  </div>
+</div>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8" id="team-grid">
-        <!-- Member 1 -->
-        <div class="team-card group reveal-up">
-          <div class="overflow-hidden mb-5 relative" style="height:340px;">
-            <img
-              src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80&fit=crop&crop=face"
-              alt="James Worthington"
-              class="w-full h-full object-cover"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-obsidian/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div class="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex gap-3">
-              <a href="#" class="w-8 h-8 border border-gold-thin flex items-center justify-center text-gold hover:bg-gold hover:text-obsidian transition-colors text-xs">in</a>
-              <a href="#" class="w-8 h-8 border border-gold-thin flex items-center justify-center text-gold hover:bg-gold hover:text-obsidian transition-colors text-xs">@</a>
-            </div>
-          </div>
-          <p class="font-display text-xl text-ash-light font-medium">James Worthington</p>
-          <p class="text-xs tracking-wider uppercase text-gold mt-1">Managing Director</p>
-          <p class="text-ash text-sm mt-3 leading-relaxed">Former McKinsey senior partner with 20 years reshaping Fortune 100 strategies.</p>
-        </div>
 
-        <!-- Member 2 -->
-        <div class="team-card group reveal-up">
-          <div class="overflow-hidden mb-5 relative" style="height:340px;">
-            <img
-              src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80&fit=crop&crop=face"
-              alt="Serena Matsuda"
-              class="w-full h-full object-cover"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-obsidian/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div class="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex gap-3">
-              <a href="#" class="w-8 h-8 border border-gold-thin flex items-center justify-center text-gold hover:bg-gold hover:text-obsidian transition-colors text-xs">in</a>
-              <a href="#" class="w-8 h-8 border border-gold-thin flex items-center justify-center text-gold hover:bg-gold hover:text-obsidian transition-colors text-xs">@</a>
-            </div>
-          </div>
-          <p class="font-display text-xl text-ash-light font-medium">Serena Matsuda</p>
-          <p class="text-xs tracking-wider uppercase text-gold mt-1">Head of Innovation</p>
-          <p class="text-ash text-sm mt-3 leading-relaxed">PhD in Organisational Behaviour. Designed innovation systems for 40+ enterprise clients.</p>
-        </div>
+<!-- ══════════════════════ SERVICES ═══════════════════════ -->
+<section id="services" style="padding: 7rem 0 5rem">
+  <div style="max-width:1320px;margin:0 auto;padding:0 2rem">
 
-        <!-- Member 3 -->
-        <div class="team-card group reveal-up">
-          <div class="overflow-hidden mb-5 relative" style="height:340px;">
-            <img
-              src="https://images.unsplash.com/photo-1556157382-97eda2d62296?w=600&q=80&fit=crop&crop=face"
-              alt="Marcus Adeyemi"
-              class="w-full h-full object-cover"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-obsidian/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div class="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex gap-3">
-              <a href="#" class="w-8 h-8 border border-gold-thin flex items-center justify-center text-gold hover:bg-gold hover:text-obsidian transition-colors text-xs">in</a>
-              <a href="#" class="w-8 h-8 border border-gold-thin flex items-center justify-center text-gold hover:bg-gold hover:text-obsidian transition-colors text-xs">@</a>
-            </div>
-          </div>
-          <p class="font-display text-xl text-ash-light font-medium">Marcus Adeyemi</p>
-          <p class="text-xs tracking-wider uppercase text-gold mt-1">Partner, M&amp;A Practice</p>
-          <p class="text-ash text-sm mt-3 leading-relaxed">Advised on $28B+ in transactions across private equity and corporate M&amp;A.</p>
-        </div>
-
-        <!-- Member 4 -->
-        <div class="team-card group reveal-up">
-          <div class="overflow-hidden mb-5 relative" style="height:340px;">
-            <img
-              src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&q=80&fit=crop&crop=face"
-              alt="Priya Nair"
-              class="w-full h-full object-cover"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-obsidian/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div class="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex gap-3">
-              <a href="#" class="w-8 h-8 border border-gold-thin flex items-center justify-center text-gold hover:bg-gold hover:text-obsidian transition-colors text-xs">in</a>
-              <a href="#" class="w-8 h-8 border border-gold-thin flex items-center justify-center text-gold hover:bg-gold hover:text-obsidian transition-colors text-xs">@</a>
-            </div>
-          </div>
-          <p class="font-display text-xl text-ash-light font-medium">Priya Nair</p>
-          <p class="text-xs tracking-wider uppercase text-gold mt-1">Chief Digital Officer</p>
-          <p class="text-ash text-sm mt-3 leading-relaxed">AI and data strategy pioneer; former CTO of two unicorn startups.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════ TESTIMONIALS ════════════════════════════════════════ -->
-  <section class="py-32 px-8 md:px-16 lg:px-24 bg-obsidian-1">
-    <div class="max-w-7xl mx-auto">
-      <p class="section-label mb-4 reveal-up text-center">Client Voices</p>
-      <span class="hr-gold reveal-up mx-auto" style="margin-left:auto;margin-right:auto;background:linear-gradient(90deg,transparent,var(--gold),transparent);width:80px;"></span>
-      <h2 class="font-display font-light text-ash-light text-center leading-tight mb-20 reveal-up"
-          style="font-size:clamp(2.4rem,4.5vw,4rem);">
-        What Our <em class="text-gold-grad not-italic">Partners</em> Say.
+    <!-- Header -->
+    <div style="margin-bottom:4.5rem">
+      <p class="section-eyebrow js-up" style="margin-bottom:1rem">Our Services</p>
+      <h2 class="section-title js-up" style="max-width:580px;margin-bottom:1.4rem">
+        Every Vehicle<br>Deserves <em>Perfection</em>
       </h2>
-
-      <div class="grid md:grid-cols-3 gap-8" id="testimonials-grid">
-        <!-- T1 -->
-        <div class="relative bg-obsidian-2 p-10 border border-obsidian-4 hover:border-gold-thin transition-colors duration-400 reveal-up">
-          <span class="quote-mark">"</span>
-          <p class="text-ash leading-relaxed text-base italic font-display font-light mb-8 relative z-10">
-            APEX didn't just advise us — they became true partners in rebuilding our entire strategic operating model. The clarity and conviction they brought was unlike anything we'd experienced from a consultancy.
-          </p>
-          <div class="flex items-center gap-4">
-            <img
-              src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80&fit=crop&crop=face"
-              alt="Client"
-              class="w-12 h-12 rounded-full object-cover border border-gold-thin"
-            />
-            <div>
-              <p class="text-ash-light font-medium font-body text-sm">Robert Chen</p>
-              <p class="text-gold text-xs tracking-wider uppercase">CEO, Meridian Financial</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- T2 -->
-        <div class="relative bg-obsidian-2 p-10 border border-obsidian-4 hover:border-gold-thin transition-colors duration-400 reveal-up">
-          <span class="quote-mark">"</span>
-          <p class="text-ash leading-relaxed text-base italic font-display font-light mb-8 relative z-10">
-            The innovation programme APEX ran for us led directly to three products now generating significant revenue. Their process is rigorous, creative, and deeply respectful of our culture.
-          </p>
-          <div class="flex items-center gap-4">
-            <img
-              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80&fit=crop&crop=face"
-              alt="Client"
-              class="w-12 h-12 rounded-full object-cover border border-gold-thin"
-            />
-            <div>
-              <p class="text-ash-light font-medium font-body text-sm">Amara Osei</p>
-              <p class="text-gold text-xs tracking-wider uppercase">CTO, HealthPath Group</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- T3 -->
-        <div class="relative bg-obsidian-2 p-10 border border-obsidian-4 hover:border-gold-thin transition-colors duration-400 reveal-up">
-          <span class="quote-mark">"</span>
-          <p class="text-ash leading-relaxed text-base italic font-display font-light mb-8 relative z-10">
-            In a crowded advisory market, APEX stands apart for one reason: they tell you the truth. Hard truths, actionable insights, and a team that genuinely cares whether you succeed.
-          </p>
-          <div class="flex items-center gap-4">
-            <img
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80&fit=crop&crop=face"
-              alt="Client"
-              class="w-12 h-12 rounded-full object-cover border border-gold-thin"
-            />
-            <div>
-              <p class="text-ash-light font-medium font-body text-sm">Thomas Halverson</p>
-              <p class="text-gold text-xs tracking-wider uppercase">COO, NordVentures</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Logos row -->
-      <div class="mt-20 pt-16 border-t border-gold-thin">
-        <p class="text-center section-label mb-10 reveal-up">Trusted By The World's Best</p>
-        <div class="flex flex-wrap items-center justify-center gap-12 md:gap-20 reveal-fade" id="logos-row">
-          <span class="font-display text-2xl text-ash-dark font-semibold opacity-40 hover:opacity-80 transition-opacity duration-300 cursor-default">Goldman Sachs</span>
-          <span class="font-display text-2xl text-ash-dark font-semibold opacity-40 hover:opacity-80 transition-opacity duration-300 cursor-default">Novartis</span>
-          <span class="font-display text-2xl text-ash-dark font-semibold opacity-40 hover:opacity-80 transition-opacity duration-300 cursor-default">Amazon</span>
-          <span class="font-display text-2xl text-ash-dark font-semibold opacity-40 hover:opacity-80 transition-opacity duration-300 cursor-default">Blackrock</span>
-          <span class="font-display text-2xl text-ash-dark font-semibold opacity-40 hover:opacity-80 transition-opacity duration-300 cursor-default">Airbus</span>
-        </div>
-      </div>
+      <div class="gold-rule js-up" style="margin-bottom:1.4rem"></div>
+      <p class="js-up" style="font-size:.85rem;color:var(--muted-light);max-width:480px;line-height:1.85">
+        Hand-crafted technique, premium products, and uncompromising attention to detail — from a quick wash to a show-ready multi-stage polish.
+      </p>
     </div>
-  </section>
 
-  <!-- ════════════════════════════════════════ CONTACT ════════════════════════════════════════ -->
-  <section id="contact" class="py-32 px-8 md:px-16 lg:px-24 bg-obsidian-2">
-    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-20 items-start">
-      <!-- Left -->
-      <div>
-        <p class="section-label mb-4 reveal-up">Start a Conversation</p>
-        <span class="hr-gold reveal-up"></span>
-        <h2 class="font-display font-light text-ash-light leading-tight mb-8 reveal-up"
-            style="font-size:clamp(2.4rem,4vw,3.8rem);">
-          Ready to Reach<br/>
-          <em class="text-gold-grad not-italic">Your Apex?</em>
-        </h2>
-        <p class="text-ash leading-relaxed mb-12 reveal-up">
-          Whether you're navigating a critical transition, planning your next chapter, or simply curious about what's possible — we'd be honoured to listen. Our partners respond within 24 hours.
-        </p>
+    <!-- ── CARDS GRID ── -->
+    <div id="pricing" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:1.5rem;margin-bottom:2rem">
 
-        <div class="space-y-8 reveal-up">
-          <div class="flex items-start gap-5">
-            <div class="w-10 h-10 border border-gold-thin flex items-center justify-center flex-shrink-0 mt-1">
-              <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
-              </svg>
-            </div>
-            <div>
-              <p class="section-label mb-1">Email</p>
-              <a href="mailto:partners@apexstrategy.com" class="text-ash-light hover:text-gold transition-colors">partners@apexstrategy.com</a>
-            </div>
+      <!-- 1 · SF Car Wash -->
+      <div class="card svc-card" style="padding:2.4rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.4rem">
+          <div>
+            <span class="tier-pill tier-base" style="margin-bottom:.65rem;display:inline-block">Essential</span>
+            <div class="card-name">SF Car Wash</div>
           </div>
-          <div class="flex items-start gap-5">
-            <div class="w-10 h-10 border border-gold-thin flex items-center justify-center flex-shrink-0 mt-1">
-              <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
-              </svg>
-            </div>
-            <div>
-              <p class="section-label mb-1">Phone</p>
-              <a href="tel:+12125550190" class="text-ash-light hover:text-gold transition-colors">+1 (212) 555-0190</a>
-            </div>
+          <div style="text-align:right">
+            <div class="card-from">From</div>
+            <div class="card-price">$75</div>
           </div>
-          <div class="flex items-start gap-5">
-            <div class="w-10 h-10 border border-gold-thin flex items-center justify-center flex-shrink-0 mt-1">
-              <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
-              </svg>
-            </div>
-            <div>
-              <p class="section-label mb-1">Offices</p>
-              <p class="text-ash-light">New York · London · Singapore</p>
-            </div>
-          </div>
+        </div>
+        <div style="flex:1">
+          <div class="inc-label">Includes</div>
+          <div class="feature-row"><span class="dash">—</span>Exterior hand wash</div>
+          <div class="feature-row"><span class="dash">—</span>Spray wax rinse</div>
+          <div class="feature-row"><span class="dash">—</span>Wheel-well cleaning</div>
+          <div class="feature-row"><span class="dash">—</span>Interior vacuuming (including trunk)</div>
+          <div class="feature-row"><span class="dash">—</span>Glass cleaning</div>
+          <div class="feature-row"><span class="dash">—</span>Dry with microfiber towel</div>
+        </div>
+        <div class="price-grid" style="margin-top:1.8rem">
+          <div class="pg-cell"><div class="pg-size">Small</div><div class="pg-val">$75</div></div>
+          <div class="pg-cell"><div class="pg-size">Medium</div><div class="pg-val">$85</div></div>
+          <div class="pg-cell"><div class="pg-size">Large</div><div class="pg-val">$95</div></div>
         </div>
       </div>
 
-      <!-- Right: Form -->
-      <div class="reveal-right">
-        <div class="bg-obsidian-1 p-10 md:p-12 border border-obsidian-4">
-          <div class="grid grid-cols-2 gap-8 mb-8">
-            <div>
-              <label class="section-label block mb-2">First Name</label>
-              <input type="text" class="form-input" placeholder="James" />
-            </div>
-            <div>
-              <label class="section-label block mb-2">Last Name</label>
-              <input type="text" class="form-input" placeholder="Worthington" />
-            </div>
+      <!-- 2 · SF Deluxe Car Wash -->
+      <div class="card svc-card" style="padding:2.4rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.4rem">
+          <div>
+            <span class="tier-pill tier-plus" style="margin-bottom:.65rem;display:inline-block">Premium</span>
+            <div class="card-name">SF Deluxe Wash</div>
           </div>
-          <div class="mb-8">
-            <label class="section-label block mb-2">Company &amp; Role</label>
-            <input type="text" class="form-input" placeholder="CEO, Acme Corporation" />
+          <div style="text-align:right">
+            <div class="card-from">From</div>
+            <div class="card-price">$180</div>
           </div>
-          <div class="mb-8">
-            <label class="section-label block mb-2">Email Address</label>
-            <input type="email" class="form-input" placeholder="james@acme.com" />
-          </div>
-          <div class="mb-8">
-            <label class="section-label block mb-2">Service of Interest</label>
-            <select class="form-input bg-obsidian-1 cursor-pointer">
-              <option value="" style="background:#161616;">Select a service…</option>
-              <option style="background:#161616;">Corporate Strategy</option>
-              <option style="background:#161616;">Digital Transformation</option>
-              <option style="background:#161616;">Leadership &amp; Talent</option>
-              <option style="background:#161616;">M&amp;A Advisory</option>
-              <option style="background:#161616;">Market Expansion</option>
-              <option style="background:#161616;">Innovation Labs</option>
-            </select>
-          </div>
-          <div class="mb-10">
-            <label class="section-label block mb-2">Your Challenge</label>
-            <textarea class="form-input resize-none" rows="4" placeholder="Briefly describe your strategic challenge or objective…"></textarea>
-          </div>
-          <button class="btn-primary w-full justify-center" id="submit-btn">
-            <span>Send Message</span>
-            <span>→</span>
-          </button>
-          <p class="text-xs text-ash-dark text-center mt-4">We respond within 24 hours. Your information is never shared.</p>
+        </div>
+        <div style="flex:1">
+          <div class="inc-label" style="color:var(--muted-light)">SF Car Wash +</div>
+          <div class="feature-row"><span class="dash">—</span>Spray paint body gloss</div>
+          <div class="feature-row"><span class="dash">—</span>Carpet / floor mat spot cleaning</div>
+          <div class="feature-row"><span class="dash">—</span>Leather conditioning</div>
+          <div class="feature-row"><span class="dash">—</span>Tire conditioning</div>
+        </div>
+        <div class="price-grid" style="margin-top:1.8rem">
+          <div class="pg-cell"><div class="pg-size">Small</div><div class="pg-val">$180</div></div>
+          <div class="pg-cell"><div class="pg-size">Medium</div><div class="pg-val">$220</div></div>
+          <div class="pg-cell"><div class="pg-size">Large</div><div class="pg-val">$260</div></div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ════════════════════════════════════════ FOOTER ════════════════════════════════════════ -->
-  <footer class="bg-obsidian border-t border-gold-thin pt-20 pb-10 px-8 md:px-16 lg:px-24">
-    <div class="max-w-7xl mx-auto">
-      <!-- Top row -->
-      <div class="grid md:grid-cols-4 gap-14 pb-16 border-b border-obsidian-4">
-        <!-- Brand -->
-        <div class="md:col-span-1">
-          <a href="#hero" class="flex items-center gap-3 mb-6">
-            <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-              <polygon points="14,1 27,27 1,27" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
-              <polygon points="14,7 22,24 6,24" fill="#C9A84C" opacity="0.2"/>
-            </svg>
-            <span class="font-display font-semibold tracking-widest text-ash-light">APEX</span>
+      <!-- 3 · SF Ultimate Car Wash -->
+      <div class="card svc-card" style="padding:2.4rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.4rem">
+          <div>
+            <span class="tier-pill tier-plus" style="margin-bottom:.65rem;display:inline-block">Premium+</span>
+            <div class="card-name">SF Ultimate Wash</div>
+          </div>
+          <div style="text-align:right">
+            <div class="card-from">From</div>
+            <div class="card-price">$300</div>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div class="inc-label" style="color:var(--muted-light)">SF Deluxe +</div>
+          <div class="feature-row"><span class="dash">—</span>Exterior hand waxing</div>
+          <div class="feature-row"><span class="dash">—</span>Interior minor spot touch-up</div>
+          <div class="feature-row"><span class="dash">—</span>Complete glass cleaning</div>
+        </div>
+        <div class="price-grid" style="margin-top:1.8rem">
+          <div class="pg-cell"><div class="pg-size">Small</div><div class="pg-val">$300</div></div>
+          <div class="pg-cell"><div class="pg-size">Medium</div><div class="pg-val">$340</div></div>
+          <div class="pg-cell"><div class="pg-size">Large</div><div class="pg-val">$360</div></div>
+        </div>
+      </div>
+
+      <!-- 4 · SF Hand Wax -->
+      <div class="card svc-card" style="padding:2.4rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.4rem">
+          <div>
+            <span class="tier-pill tier-elite" style="margin-bottom:.65rem;display:inline-block">Elite</span>
+            <div class="card-name">SF Hand Wax</div>
+          </div>
+          <div style="text-align:right">
+            <div class="card-from">From</div>
+            <div class="card-price">$450</div>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div class="inc-label" style="color:var(--muted-light)">SF Deluxe +</div>
+          <div class="feature-row"><span class="dash">—</span>Oxidation removal</div>
+          <div class="feature-row"><span class="dash">—</span>1-stage orbital wax</div>
+        </div>
+        <div class="price-grid" style="margin-top:1.8rem">
+          <div class="pg-cell"><div class="pg-size">Small</div><div class="pg-val">$450</div></div>
+          <div class="pg-cell"><div class="pg-size">Medium</div><div class="pg-val">$480</div></div>
+          <div class="pg-cell"><div class="pg-size">Large</div><div class="pg-val">$550</div></div>
+        </div>
+      </div>
+
+      <!-- 5 · SF Mini Detail -->
+      <div class="card svc-card" style="padding:2.4rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.4rem">
+          <div>
+            <span class="tier-pill tier-elite" style="margin-bottom:.65rem;display:inline-block">Elite</span>
+            <div class="card-name">SF Mini Detail</div>
+          </div>
+          <div style="text-align:right">
+            <div class="card-from">From</div>
+            <div class="card-price">$450</div>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div class="inc-label">Includes</div>
+          <div class="feature-row"><span class="dash">—</span>Interior reconditioning</div>
+          <div class="feature-row"><span class="dash">—</span>Carpet & fabric seat shampooing + complete dry</div>
+          <div class="feature-row"><span class="dash">—</span>Panel cream protection</div>
+          <div class="feature-row"><span class="dash">—</span>Leather/vinyl complete clean & protection</div>
+          <div class="feature-row"><span class="dash">—</span>SF Car Wash included</div>
+          <div style="font-size:.68rem;color:var(--muted);font-style:italic;margin-top:.8rem;line-height:1.7">
+            Add-ons: seatbelt cleaning, sand / dog hair removal, window repair, ceiling cleaning
+          </div>
+        </div>
+        <div class="price-grid" style="margin-top:1.8rem">
+          <div class="pg-cell"><div class="pg-size">Small</div><div class="pg-val">$450</div></div>
+          <div class="pg-cell"><div class="pg-size">Medium</div><div class="pg-val">$480</div></div>
+          <div class="pg-cell"><div class="pg-size">Large</div><div class="pg-val">$550</div></div>
+        </div>
+      </div>
+
+      <!-- 6 · SF Detail (Signature) -->
+      <div class="card featured svc-card" style="padding:2.4rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.4rem">
+          <div>
+            <span class="tier-pill tier-sig" style="margin-bottom:.65rem;display:inline-block">★ Signature</span>
+            <div class="card-name">SF Detail</div>
+          </div>
+          <div style="text-align:right">
+            <div class="card-from">From</div>
+            <div class="card-price">$650</div>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div class="inc-label">Includes</div>
+          <div class="feature-row"><span class="dash">—</span>All SF Car Wash services</div>
+          <div class="feature-row"><span class="dash">—</span>All SF Mini Detail services</div>
+          <div class="feature-row"><span class="dash">—</span>Hand wax</div>
+          <div class="feature-row"><span class="dash">—</span>Full rubber protection</div>
+        </div>
+        <div class="price-grid" style="margin-top:1.8rem">
+          <div class="pg-cell"><div class="pg-size">Small</div><div class="pg-val">$650</div></div>
+          <div class="pg-cell"><div class="pg-size">Medium</div><div class="pg-val">$680</div></div>
+          <div class="pg-cell"><div class="pg-size">Large</div><div class="pg-val">$690</div></div>
+        </div>
+      </div>
+
+      <!-- 7 · SF Full Detail -->
+      <div class="card featured svc-card" style="padding:2.4rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.4rem">
+          <div>
+            <span class="tier-pill tier-sig" style="margin-bottom:.65rem;display:inline-block">★★ Full</span>
+            <div class="card-name">SF Full Detail</div>
+          </div>
+          <div style="text-align:right">
+            <div class="card-from">From</div>
+            <div class="card-price">$780</div>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div class="inc-label">Includes</div>
+          <div class="feature-row"><span class="dash">—</span>Oxidation removal</div>
+          <div class="feature-row"><span class="dash">—</span>One-stage orbital wax</div>
+          <div class="feature-row"><span class="dash">—</span>Full rubber protection</div>
+          <div class="feature-row"><span class="dash">—</span>Scuff removal</div>
+          <div class="feature-row"><span class="dash">—</span>SF Mini Detail included</div>
+          <div style="margin-top:1rem">
+            <span class="bm-badge">🔥 Great post-Burning Man cleanup!</span>
+          </div>
+        </div>
+        <div class="price-grid" style="margin-top:1.8rem">
+          <div class="pg-cell"><div class="pg-size">Small</div><div class="pg-val">$780</div></div>
+          <div class="pg-cell"><div class="pg-size">Medium</div><div class="pg-val">$890</div></div>
+          <div class="pg-cell"><div class="pg-size">Large</div><div class="pg-val">$990</div></div>
+        </div>
+      </div>
+
+      <!-- 8 · SF Super Detail (Crown Jewel — spans 2 cols on large screens) -->
+      <div class="card crown svc-card" style="padding:2.4rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.4rem;flex-wrap:wrap;gap:.8rem">
+          <div>
+            <span class="tier-pill tier-crown" style="margin-bottom:.65rem;display:inline-block">★★★ Crown Jewel</span>
+            <div class="card-name" style="font-size:2rem">SF Super Detail</div>
+          </div>
+          <div style="text-align:right">
+            <div class="card-from">Starting at</div>
+            <div class="card-price" style="font-size:2.4rem">$1,090</div>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div class="inc-label">The Ultimate Treatment</div>
+          <div class="feature-row"><span class="dash">—</span>Oxidation removal</div>
+          <div class="feature-row"><span class="dash">—</span>Three-stage polish</div>
+          <div class="feature-row"><span class="dash">—</span>Orbital wax</div>
+          <div class="feature-row"><span class="dash">—</span>Free swirl mark removal</div>
+          <div class="feature-row"><span class="dash">—</span>Special leather protection or fiber cloth seat treatment</div>
+          <div style="background:rgba(200,168,75,.07);border:1px solid rgba(200,168,75,.18);padding:.9rem 1rem;margin-top:1.2rem;font-size:.73rem;color:rgba(246,244,238,.7);line-height:1.7">
+            ⚠ Pricing varies by vehicle specifics — please call to confirm your quote before booking.
+          </div>
+        </div>
+        <div style="margin-top:1.8rem">
+          <a href="tel:4157761844" class="btn-gold" style="width:100%;justify-content:center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+            Call for Your Custom Quote · 415-776-1844
           </a>
-          <p class="text-ash text-sm leading-relaxed max-w-xs mb-8">
-            Transforming organisations through precision strategy, innovation, and the courage to act.
-          </p>
-          <div class="flex gap-3">
-            <a href="#" class="w-9 h-9 border border-obsidian-4 flex items-center justify-center text-ash-dark hover:border-gold hover:text-gold transition-colors text-xs">in</a>
-            <a href="#" class="w-9 h-9 border border-obsidian-4 flex items-center justify-center text-ash-dark hover:border-gold hover:text-gold transition-colors text-xs">tw</a>
-            <a href="#" class="w-9 h-9 border border-obsidian-4 flex items-center justify-center text-ash-dark hover:border-gold hover:text-gold transition-colors text-xs">@</a>
-          </div>
-        </div>
-
-        <!-- Services -->
-        <div>
-          <p class="section-label mb-6">Services</p>
-          <ul class="space-y-4">
-            <li><a href="#services" class="text-ash text-sm hover:text-gold transition-colors">Corporate Strategy</a></li>
-            <li><a href="#services" class="text-ash text-sm hover:text-gold transition-colors">Digital Transformation</a></li>
-            <li><a href="#services" class="text-ash text-sm hover:text-gold transition-colors">Leadership &amp; Talent</a></li>
-            <li><a href="#services" class="text-ash text-sm hover:text-gold transition-colors">M&amp;A Advisory</a></li>
-            <li><a href="#services" class="text-ash text-sm hover:text-gold transition-colors">Market Expansion</a></li>
-            <li><a href="#services" class="text-ash text-sm hover:text-gold transition-colors">Innovation Labs</a></li>
-          </ul>
-        </div>
-
-        <!-- Company -->
-        <div>
-          <p class="section-label mb-6">Company</p>
-          <ul class="space-y-4">
-            <li><a href="#about" class="text-ash text-sm hover:text-gold transition-colors">About APEX</a></li>
-            <li><a href="#team"  class="text-ash text-sm hover:text-gold transition-colors">Our Team</a></li>
-            <li><a href="#work"  class="text-ash text-sm hover:text-gold transition-colors">Case Studies</a></li>
-            <li><a href="#"     class="text-ash text-sm hover:text-gold transition-colors">Insights &amp; Research</a></li>
-            <li><a href="#"     class="text-ash text-sm hover:text-gold transition-colors">Careers</a></li>
-            <li><a href="#contact" class="text-ash text-sm hover:text-gold transition-colors">Contact</a></li>
-          </ul>
-        </div>
-
-        <!-- Newsletter -->
-        <div>
-          <p class="section-label mb-6">Stay Ahead</p>
-          <p class="text-ash text-sm leading-relaxed mb-6">Receive our monthly Insights brief — sharp perspectives on strategy, innovation, and leadership.</p>
-          <div class="flex">
-            <input type="email" class="form-input text-sm flex-1" placeholder="your@email.com" style="padding: 10px 0;" />
-            <button class="bg-gold text-obsidian px-5 flex-shrink-0 text-xs tracking-widest uppercase hover:bg-gold-light transition-colors font-medium">→</button>
-          </div>
         </div>
       </div>
 
-      <!-- Bottom row -->
-      <div class="pt-10 flex flex-col md:flex-row items-center justify-between gap-6 text-ash-dark text-xs tracking-wider">
-        <p>© 2026 APEX Strategy &amp; Innovation. All rights reserved.</p>
-        <div class="flex gap-8">
-          <a href="#" class="hover:text-gold transition-colors">Privacy Policy</a>
-          <a href="#" class="hover:text-gold transition-colors">Terms of Use</a>
-          <a href="#" class="hover:text-gold transition-colors">Cookie Settings</a>
-        </div>
+    </div><!-- /grid -->
+
+    <!-- Notes bar -->
+    <div class="notes-bar js-up" style="padding:2rem 2.4rem;margin-top:.5rem">
+      <div style="font-size:.6rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem">Important Notes</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.7rem .5rem">
+        <div class="note-item">Prices vary by vehicle size: Small / Medium / Large</div>
+        <div class="note-item">2-Door Coupes are priced as Medium</div>
+        <div class="note-item">Includes all makes, models &amp; motorcycles</div>
+        <div class="note-item">Ceramic Coating available — call to request</div>
+        <div class="note-item">Motor cleaning is <em>not</em> available</div>
+        <div class="note-item">Call 415-776-1844 to schedule your appointment</div>
       </div>
     </div>
-  </footer>
 
-  <!-- Back to Top -->
-  <button id="back-top"
-    class="fixed bottom-8 right-8 w-12 h-12 border border-gold-thin flex items-center justify-center text-gold hover:bg-gold hover:text-obsidian transition-all duration-300 z-30 opacity-0 pointer-events-none"
-    aria-label="Back to top">
-    ↑
-  </button>
+  </div>
+</section>
 
-  <!-- ════════════════════════════════════════ SCRIPTS ════════════════════════════════════════ -->
-  <script>
-    // ── Register GSAP plugins ──────────────────────────────────────────────
-    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-    // ── Custom cursor ──────────────────────────────────────────────────────
-    const dot  = document.getElementById('cursor-dot');
-    const ring = document.getElementById('cursor-ring');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      gsap.to(dot,  { x: mx, y: my, duration: 0.05, ease: 'none' });
-    });
-    (function moveRing() {
-      rx += (mx - rx) * 0.12;
-      ry += (my - ry) * 0.12;
-      ring.style.left = rx + 'px';
-      ring.style.top  = ry + 'px';
-      requestAnimationFrame(moveRing);
-    })();
-    document.querySelectorAll('a, button, .service-card, .team-card').forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        gsap.to(ring, { width: 60, height: 60, opacity: 0.8, duration: 0.3 });
-        gsap.to(dot,  { width: 4, height: 4, opacity: 0.5, duration: 0.2 });
-      });
-      el.addEventListener('mouseleave', () => {
-        gsap.to(ring, { width: 38, height: 38, opacity: 1, duration: 0.3 });
-        gsap.to(dot,  { width: 8, height: 8, opacity: 1, duration: 0.2 });
-      });
-    });
+<!-- ══════════════════════ WHY CHOOSE US ═══════════════════ -->
+<section id="why" style="padding:7rem 0">
+  <div style="max-width:1320px;margin:0 auto;padding:0 2rem">
 
-    // ── Progress bar ───────────────────────────────────────────────────────
-    const bar = document.getElementById('progress-bar');
-    window.addEventListener('scroll', () => {
-      const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-      bar.style.width = pct + '%';
-    }, { passive: true });
+    <div class="about-cols" style="display:flex;gap:5rem;align-items:center">
 
-    // ── Navbar scroll ──────────────────────────────────────────────────────
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 60);
-    }, { passive: true });
+      <!-- Left copy -->
+      <div style="flex:0 0 auto;width:100%;max-width:460px">
+        <p class="section-eyebrow js-up" style="margin-bottom:1rem">Why Choose Us</p>
+        <h2 class="section-title js-up" style="margin-bottom:1.2rem">
+          The City's Most<br><em>Trusted</em> Detail
+        </h2>
+        <div class="gold-rule js-up" style="margin-bottom:1.6rem"></div>
+        <p class="js-up" style="font-size:.86rem;color:var(--muted-light);line-height:1.95;margin-bottom:1.4rem">
+          San Francisco Auto Detail combines meticulous hand-crafted technique with professional-grade products and a genuine love for vehicles. We believe every car deserves to look its absolute best.
+        </p>
+        <p class="js-up" style="font-size:.86rem;color:var(--muted-light);line-height:1.95;margin-bottom:2.5rem">
+          From your daily commuter to your prized weekend ride, we service any make and model — including motorcycles. Post Burning Man? We've got you covered.
+        </p>
+        <div class="js-up" style="display:flex;gap:1rem;flex-wrap:wrap">
+          <a href="tel:4157761844" class="btn-gold">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+            Call 415-776-1844
+          </a>
+          <a href="#services" class="btn-outline">See Packages</a>
+        </div>
+      </div>
 
-    // ── Mobile menu ────────────────────────────────────────────────────────
-    const menu  = document.getElementById('mobile-menu');
-    document.getElementById('hamburger').addEventListener('click', () => {
-      menu.classList.replace('closed', 'open');
-    });
-    document.getElementById('close-menu').addEventListener('click', closeMenu);
-    function closeMenu() { menu.classList.replace('open', 'closed'); }
+      <!-- Right grid -->
+      <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="why-card why-c">
+          <div class="why-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M7 11.5V14m0-2.5V9m0 2.5H9.5m-2.5 0H5m14 0c0 4.418-3.134 8-7 8s-7-3.582-7-8 3.134-8 7-8 7 3.582 7 8z"/></svg>
+          </div>
+          <div class="why-title">Hand-Crafted Only</div>
+          <div class="why-desc">Every wash is done entirely by hand using premium microfiber tools — no automated machines, ever.</div>
+        </div>
+        <div class="why-card why-c">
+          <div class="why-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="why-title">Paint-Safe Techniques</div>
+          <div class="why-desc">We protect your clear coat and finish with techniques designed to enhance, not harm, your paint.</div>
+        </div>
+        <div class="why-card why-c">
+          <div class="why-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="why-title">All Vehicles</div>
+          <div class="why-desc">Cars, SUVs, trucks, and motorcycles — any make, any model, any size.</div>
+        </div>
+        <div class="why-card why-c">
+          <div class="why-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div class="why-title">SF Local</div>
+          <div class="why-desc">Proudly rooted in San Francisco — local business, local pride, and a local standard of excellence.</div>
+        </div>
+        <div class="why-card why-c" style="grid-column:span 2">
+          <div class="why-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div class="why-title">Ceramic Coating on Request</div>
+          <div class="why-desc">Want the ultimate long-term paint protection? We offer ceramic coating as a premium add-on. Call us to discuss options and pricing for your specific vehicle.</div>
+        </div>
+      </div>
 
-    // ── Back to top ────────────────────────────────────────────────────────
-    const btTop = document.getElementById('back-top');
-    window.addEventListener('scroll', () => {
-      const show = window.scrollY > 400;
-      btTop.style.opacity = show ? '1' : '0';
-      btTop.style.pointerEvents = show ? 'all' : 'none';
-    }, { passive: true });
-    btTop.addEventListener('click', () => gsap.to(window, { scrollTo: 0, duration: 1.2, ease: 'power3.inOut' }));
+    </div>
+  </div>
+</section>
 
-    // ── Smooth anchor scrolling ────────────────────────────────────────────
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        const target = document.querySelector(a.getAttribute('href'));
-        if (target) {
-          e.preventDefault();
-          gsap.to(window, { scrollTo: { y: target, offsetY: 80 }, duration: 1.1, ease: 'power3.inOut' });
-        }
-      });
-    });
 
-    // ── Hero entrance ──────────────────────────────────────────────────────
-    const heroTl = gsap.timeline({ delay: 0.2 });
-    heroTl
-      .from('#hero-label', { opacity: 0, y: 30, duration: 0.9, ease: 'power3.out' })
-      .from('#hero-h1',    { opacity: 0, y: 60, duration: 1.1, ease: 'power3.out' }, '-=0.5')
-      .from('#hero-sub',   { opacity: 0, y: 40, duration: 0.9, ease: 'power3.out' }, '-=0.6')
-      .from('#hero-ctas',  { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out' }, '-=0.6')
-      .from('#hero-stats', { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out' }, '-=0.5');
+<!-- ══════════════════ CERAMIC ADD-ON BAR ════════════════════ -->
+<div id="ceramic-bar" style="padding:2.8rem 0">
+  <div style="max-width:1320px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem">
+    <div>
+      <div class="section-eyebrow js-up" style="margin-bottom:.5rem">Premium Add-On</div>
+      <div class="f-display js-up" style="font-size:1.9rem;font-weight:600">Ceramic Coating</div>
+      <div class="js-up" style="font-size:.78rem;color:var(--muted-light);margin-top:.35rem">Long-lasting paint protection · Available by appointment · Call to request pricing</div>
+    </div>
+    <a href="tel:4157761844" class="btn-gold js-up">
+      Request Ceramic Coating →
+    </a>
+  </div>
+</div>
 
-    // ── Hero parallax ──────────────────────────────────────────────────────
-    gsap.to('#hero-bg', {
-      yPercent: 25,
-      ease: 'none',
-      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
-    });
 
-    // ── Generic reveal helper ──────────────────────────────────────────────
-    function revealElements(selector, vars = {}) {
-      gsap.utils.toArray(selector).forEach((el, i) => {
-        const base = { duration: 1, ease: 'power3.out', delay: i * 0.12 };
-        ScrollTrigger.create({
+<!-- ════════════════════════ CTA ══════════════════════════ -->
+<section id="cta" style="padding:10rem 0">
+  <div class="cta-radial"></div>
+  <div class="cta-rings"></div>
+  <div style="position:relative;z-index:2;max-width:800px;margin:0 auto;padding:0 2rem;text-align:center">
+    <p class="section-eyebrow js-up" style="justify-content:center;margin-bottom:1.4rem">Ready to Book?</p>
+    <h2 class="section-title js-up" style="margin-bottom:1.3rem">
+      Call Now to Make<br><em>Your Appointment</em>
+    </h2>
+    <div class="gold-rule js-up" style="margin:0 auto 1.8rem;background:linear-gradient(90deg,transparent,var(--gold),transparent);width:60px"></div>
+    <p class="js-up" style="font-size:.86rem;color:var(--muted-light);line-height:1.9;max-width:420px;margin:0 auto 2.8rem">
+      San Francisco's premier auto detailing service is just one call away. Any make, any model, any size. We'll have your vehicle looking flawless.
+    </p>
+    <div class="js-up" style="margin-bottom:2.2rem">
+      <a href="tel:4157761844" class="phone-big">415-776-1844</a>
+    </div>
+    <div class="js-up">
+      <a href="tel:4157761844" class="btn-gold" style="font-size:.75rem;padding:1.1rem 3rem;display:inline-flex">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        Book Your Appointment Today
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ FOOTER ════════════════════════ -->
+<footer style="padding:4.5rem 0 2rem">
+  <div style="max-width:1320px;margin:0 auto;padding:0 2rem">
+    <div class="foot-cols" style="display:flex;gap:4rem;margin-bottom:4rem;flex-wrap:wrap">
+
+      <!-- Brand col -->
+      <div style="flex:2;min-width:220px">
+        <div class="foot-logo" style="margin-bottom:1rem">SF <em>Auto</em> Detail</div>
+        <p style="font-size:.78rem;color:var(--muted);line-height:1.9;max-width:280px;margin-bottom:1.4rem">
+          Premium hand-crafted auto detailing for every make and model — including motorcycles — in the heart of San Francisco.
+        </p>
+        <div style="font-size:.62rem;color:rgba(200,168,75,.45);letter-spacing:.12em">Any Make · Any Model · Any Size</div>
+      </div>
+
+      <!-- Services col -->
+      <div style="flex:1;min-width:140px">
+        <div class="foot-col-label">Packages</div>
+        <a href="#pricing" class="foot-link">SF Car Wash</a>
+        <a href="#pricing" class="foot-link">SF Deluxe Wash</a>
+        <a href="#pricing" class="foot-link">SF Ultimate Wash</a>
+        <a href="#pricing" class="foot-link">SF Mini Detail</a>
+        <a href="#pricing" class="foot-link">SF Full Detail</a>
+        <a href="#pricing" class="foot-link">SF Super Detail</a>
+      </div>
+
+      <!-- Contact col -->
+      <div style="flex:1;min-width:160px">
+        <div class="foot-col-label">Contact</div>
+        <div style="margin-bottom:1.4rem">
+          <div style="font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">Phone</div>
+          <a href="tel:4157761844" style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--gold);text-decoration:none;transition:color .3s" onmouseover="this.style.color='var(--gold-bright)'" onmouseout="this.style.color='var(--gold)'">415-776-1844</a>
+        </div>
+        <div style="margin-bottom:1rem">
+          <div style="font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">Location</div>
+          <div style="font-size:.8rem;color:var(--white)">San Francisco, CA</div>
+        </div>
+        <div>
+          <div style="font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">Booking</div>
+          <div style="font-size:.8rem;color:var(--white)">By appointment · Call to schedule</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div style="border-top:1px solid rgba(255,255,255,.04);padding-top:1.8rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+      <div style="font-size:.65rem;color:rgba(255,255,255,.18)">© 2025 SF Auto Detail · San Francisco, California · All rights reserved</div>
+      <div style="font-size:.65rem;color:rgba(255,255,255,.18)">Motor cleaning not available · Ceramic coating by appointment only</div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════ SCRIPTS ════════════════════════ -->
+<script>
+  /* ── Register plugin ─────────────────────────────── */
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ── NAV scroll ──────────────────────────────────── */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('solid', window.scrollY > 60);
+  }, { passive: true });
+
+  /* ── Mobile menu ─────────────────────────────────── */
+  function toggleMenu() {
+    const mm  = document.getElementById('mobile-menu');
+    const ham = document.getElementById('ham');
+    mm.classList.toggle('open');
+    ham.classList.toggle('open');
+  }
+
+  /* ── HERO entrance timeline ──────────────────────── */
+  const htl = gsap.timeline({ delay: 0.15 });
+  htl
+    .from('#h-eye',  { opacity: 0, y: 16, duration: .7, ease: 'power3.out' })
+    .from('.h1-l1',  { opacity: 0, y: 55, duration: .9, ease: 'power4.out' }, '-=.3')
+    .from('.h1-l2',  { opacity: 0, y: 55, duration: .9, ease: 'power4.out' }, '-=.65')
+    .from('.h1-l3',  { opacity: 0, y: 55, duration: .9, ease: 'power4.out' }, '-=.65')
+    .from('#h-div',  { scaleX: 0, transformOrigin: 'left', duration: .8, ease: 'power3.out' }, '-=.5')
+    .from('#h-sub',  { opacity: 0, y: 18, duration: .7, ease: 'power3.out' }, '-=.55')
+    .from('#h-btns > *', { opacity: 0, y: 14, stagger: .14, duration: .65, ease: 'power3.out' }, '-=.45')
+    .from('.stat-item', { opacity: 0, y: 18, stagger: .08, duration: .55, ease: 'power3.out' }, '-=.3')
+    .from('.hero-big-text', { opacity: 0, scale: 1.08, duration: 2.2, ease: 'power3.out' }, 0);
+
+  /* ── Parallax big text ───────────────────────────── */
+  gsap.to('.hero-big-text', {
+    yPercent: -18,
+    ease: 'none',
+    scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
+  });
+
+  /* ── Scroll-reveal helper ────────────────────────── */
+  function reveal(selector, vars = {}) {
+    gsap.utils.toArray(selector).forEach(el => {
+      gsap.from(el, {
+        ...{ opacity: 0, y: 38, duration: .85, ease: 'power3.out' },
+        ...vars,
+        scrollTrigger: {
           trigger: el,
-          start: 'top 88%',
-          onEnter: () => gsap.to(el, Object.assign({}, base, { opacity: 1, x: 0, y: 0, scale: 1 }, vars)),
-          once: true
-        });
-      });
-    }
-
-    revealElements('.reveal-up');
-    revealElements('.reveal-left');
-    revealElements('.reveal-right');
-    revealElements('.reveal-fade');
-    revealElements('.reveal-scale');
-
-    // ── Service cards stagger ──────────────────────────────────────────────
-    ScrollTrigger.create({
-      trigger: '#services-grid',
-      start: 'top 80%',
-      onEnter: () => {
-        gsap.to('#services-grid .service-card', {
-          opacity: 1, y: 0,
-          duration: 0.8, ease: 'power3.out',
-          stagger: 0.12
-        });
-      },
-      once: true
-    });
-
-    // ── Team cards stagger ─────────────────────────────────────────────────
-    ScrollTrigger.create({
-      trigger: '#team-grid',
-      start: 'top 80%',
-      onEnter: () => {
-        gsap.to('#team-grid .team-card', {
-          opacity: 1, y: 0,
-          duration: 0.9, ease: 'power3.out',
-          stagger: 0.15
-        });
-      },
-      once: true
-    });
-
-    // ── Testimonials stagger ───────────────────────────────────────────────
-    ScrollTrigger.create({
-      trigger: '#testimonials-grid',
-      start: 'top 82%',
-      onEnter: () => {
-        gsap.to('#testimonials-grid > div', {
-          opacity: 1, y: 0,
-          duration: 0.9, ease: 'power3.out',
-          stagger: 0.18
-        });
-      },
-      once: true
-    });
-
-    // ── About images parallax ──────────────────────────────────────────────
-    gsap.to('#about-img1 img', {
-      yPercent: -10,
-      ease: 'none',
-      scrollTrigger: { trigger: '#about', start: 'top bottom', end: 'bottom top', scrub: true }
-    });
-    gsap.to('#about-img2 img', {
-      yPercent: 10,
-      ease: 'none',
-      scrollTrigger: { trigger: '#about', start: 'top bottom', end: 'bottom top', scrub: true }
-    });
-
-    // ── Case study image parallax ──────────────────────────────────────────
-    ['#cs1', '#cs2', '#cs3'].forEach(id => {
-      gsap.to(id + ' img', {
-        yPercent: 8,
-        ease: 'none',
-        scrollTrigger: { trigger: id, start: 'top bottom', end: 'bottom top', scrub: true }
+          start: 'top 87%',
+          toggleActions: 'play none none none'
+        }
       });
     });
+  }
 
-    // ── Gold line animated draw ────────────────────────────────────────────
-    gsap.utils.toArray('.hr-gold').forEach(el => {
-      gsap.fromTo(el,
-        { width: 0, opacity: 0 },
-        {
-          width: '60px', opacity: 1, duration: 1.2, ease: 'power2.out',
-          scrollTrigger: { trigger: el, start: 'top 90%', once: true }
-        }
-      );
+  /* ── Service cards staggered reveal ─────────────── */
+  gsap.from('.svc-card', {
+    opacity: 0, y: 50, duration: .8, stagger: .09,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: '#pricing', start: 'top 80%', toggleActions: 'play none none none' }
+  });
+
+  /* ── Why cards stagger ───────────────────────────── */
+  gsap.from('.why-c', {
+    opacity: 0, y: 32, duration: .7, stagger: .1,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: '#why', start: 'top 78%', toggleActions: 'play none none none' }
+  });
+
+  /* ── Generic .js-up elements ─────────────────────── */
+  reveal('.js-up');
+  reveal('.js-fade', { y: 0 });
+  reveal('.js-left',  { x: -28, y: 0 });
+  reveal('.js-right', { x: 28, y: 0 });
+
+  /* ── Gold rules scale-in ─────────────────────────── */
+  gsap.utils.toArray('.gold-rule').forEach(el => {
+    gsap.from(el, {
+      scaleX: 0, transformOrigin: 'left',
+      duration: 1, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
     });
+  });
 
-    // ── Contact form button ────────────────────────────────────────────────
-    document.getElementById('submit-btn').addEventListener('click', function() {
-      const original = this.innerHTML;
-      this.innerHTML = '<span>Message Sent!</span><span>✓</span>';
-      this.style.borderColor = '#4ade80';
-      this.style.color = '#4ade80';
-      setTimeout(() => {
-        this.innerHTML = original;
-        this.style.borderColor = '';
-        this.style.color = '';
-      }, 3000);
+  /* ── Phone number hover ──────────────────────────── */
+  const ph = document.querySelector('.phone-big');
+  if (ph) {
+    ph.addEventListener('mouseenter', () =>
+      gsap.to(ph, { scale: 1.04, duration: .3, ease: 'power2.out' }));
+    ph.addEventListener('mouseleave', () =>
+      gsap.to(ph, { scale: 1, duration: .3, ease: 'power2.out' }));
+  }
+
+  /* ── Smooth scroll for anchor links ─────────────── */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      gsap.to(window, {
+        duration: 1.2,
+        scrollTo: { y: target, offsetY: 80 },
+        ease: 'power4.inOut'
+      });
     });
+  });
+</script>
 
-    // ── Section gold line accent animation ────────────────────────────────
-    gsap.utils.toArray('section').forEach(section => {
-      gsap.fromTo(section.querySelector('.hr-gold') || section,
-        {},
-        {
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 70%',
-            toggleClass: { targets: section, className: 'in-view' }
-          }
-        }
-      );
-    });
+<!-- GSAP ScrollTo plugin for smooth anchor scrolling -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+<script>
+  // Re-register after ScrollTo loads
+  gsap.registerPlugin(ScrollTrigger);
+</script>
 
-  </script>
 </body>
 </html>
